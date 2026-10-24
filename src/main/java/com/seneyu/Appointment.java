@@ -1,16 +1,39 @@
 package com.seneyu;
 
+import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.Set;
 
+@Entity
 public class Appointment {
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @Column(nullable = false)
     private Instant startTime;
+
+    @Column(nullable = false)
     private Instant endTime;
+
+    @Column(nullable = false)
     private Integer providerId;
-    private Long patientId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="patient_id", nullable = false)
+    private Patient patient;
+
+    @Column(nullable = false)
     private Integer roomId;
-    private Set<AppointmentTypes> appointmentType;
+
+    @ElementCollection(targetClass = AppointmentType.class)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Set<AppointmentType> appointmentTypes;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AppointmentStatus appointmentStatus;
 
     public Appointment() {
@@ -20,17 +43,17 @@ public class Appointment {
                        Instant startTime,
                        Instant endTime,
                        Integer providerId,
-                       Long patientId,
+                       Patient patient,
                        Integer roomId,
-                       Set<AppointmentTypes> appointmentType,
+                       Set<AppointmentType> appointmentTypes,
                        AppointmentStatus appointmentStatus) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.providerId = providerId;
-        this.patientId = patientId;
+        this.patient = patient;
         this.roomId = roomId;
-        this.appointmentType = appointmentType;
+        this.appointmentTypes = appointmentTypes;
         this.appointmentStatus = appointmentStatus;
     }
 
@@ -66,12 +89,12 @@ public class Appointment {
         this.providerId = providerId;
     }
 
-    public Long getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public Integer getRoomId() {
@@ -82,12 +105,12 @@ public class Appointment {
         this.roomId = roomId;
     }
 
-    public Set<AppointmentTypes> getAppointmentType() {
-        return appointmentType;
+    public Set<AppointmentType> getAppointmentTypes() {
+        return appointmentTypes;
     }
 
-    public void setAppointmentType(Set<AppointmentTypes> appointmentType) {
-        this.appointmentType = appointmentType;
+    public void setAppointmentTypes(Set<AppointmentType> appointmentTypes) {
+        this.appointmentTypes = appointmentTypes;
     }
 
     public AppointmentStatus getAppointmentStatus() {

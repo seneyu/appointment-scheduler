@@ -1,5 +1,5 @@
 package com.seneyu;
 
-public enum AppointmentTypes {
+public enum AppointmentType {
     EXAM, CLEANING, FILLING, CROWN, EXTRACTION, CONSULTATION, EMERGENCY
 }
