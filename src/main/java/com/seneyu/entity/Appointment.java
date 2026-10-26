@@ -1,5 +1,7 @@
-package com.seneyu;
+package com.seneyu.entity;
 
+import com.seneyu.AppointmentStatus;
+import com.seneyu.AppointmentType;
 import jakarta.persistence.*;
 
 import java.time.Instant;

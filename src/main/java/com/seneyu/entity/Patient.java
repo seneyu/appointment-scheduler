@@ -1,4 +1,4 @@
-package com.seneyu;
+package com.seneyu.entity;
 
 import jakarta.persistence.*;
 

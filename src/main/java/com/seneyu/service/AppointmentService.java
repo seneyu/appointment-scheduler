@@ -1,10 +1,13 @@
 package com.seneyu.service;
 
-import com.seneyu.Appointment;
+import com.seneyu.AppointmentStatus;
+import com.seneyu.entity.Appointment;
 import com.seneyu.repository.AppointmentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -18,7 +21,22 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
-    public void insertAppointment(Appointment appointment) {
-        appointmentRepository.save(appointment);
+    public Optional<Appointment> getAppointmentById(Long id) {
+        return appointmentRepository.findById(id);
+    }
+
+    public Appointment createAppointment(Appointment appointment) {
+        return appointmentRepository.save(appointment);
+    }
+
+    @Transactional
+    public Optional<Appointment> cancelAppointment(Long id) {
+        Optional<Appointment> found = appointmentRepository.findById(id);
+        if (found.isEmpty()) {
+            return Optional.empty();
+        }
+        Appointment appointment = found.get();
+        appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
+        return Optional.of(appointment);
     }
 }

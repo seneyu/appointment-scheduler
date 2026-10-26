@@ -5,6 +5,9 @@ GET http://127.0.0.1:8080
 GET http://localhost:8080/api/v1/patients
 
 ###
+GET http://localhost:8080/api/v1/patients/2
+
+###
 POST http://localhost:8080/api/v1/patients
 Content-Type: application/json
 
@@ -19,6 +22,9 @@ Content-Type: application/json
 GET http://localhost:8080/api/v1/appointments
 
 ###
+GET http://localhost:8080/api/v1/appointments/1
+
+###
 POST http://localhost:8080/api/v1/appointments
 Content-Type: application/json
 
@@ -31,3 +37,6 @@ Content-Type: application/json
   "appointmentTypes": ["EXAM", "CLEANING"],
   "appointmentStatus": "SCHEDULED"
 }
+
+###
+PATCH http://localhost:8080/api/v1/appointments/2/cancel

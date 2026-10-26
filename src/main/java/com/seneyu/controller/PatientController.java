@@ -1,7 +1,9 @@
 package com.seneyu.controller;
 
-import com.seneyu.Patient;
+import com.seneyu.entity.Patient;
 import com.seneyu.service.PatientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +23,16 @@ public class PatientController {
         return patientService.getAllPatients();
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
+        return patientService.getPatientById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
-    public void addNewPatient(
-            @RequestBody Patient patient) {
-        patientService.insertPatient(patient);
+    public ResponseEntity<Patient> addNewPatient(@RequestBody Patient patient) {
+        Patient savedPatient = patientService.createPatient(patient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPatient);
     }
 }
