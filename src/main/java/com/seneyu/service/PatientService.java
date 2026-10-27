@@ -1,11 +1,11 @@
 package com.seneyu.service;
 
 import com.seneyu.entity.Patient;
+import com.seneyu.exception.ResourceNotFoundException;
 import com.seneyu.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -19,11 +19,30 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Optional<Patient> getPatientById(Long id) {
-        return patientRepository.findById(id);
+    public Patient getPatientById(Long id) {
+        return patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient " + id + " not found."));
     }
 
     public Patient createPatient(Patient patient) {
         return patientRepository.save(patient);
+    }
+
+    public Patient updatePatient(Long id, Patient patientDetails) {
+        Patient updatedPatient = patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient " + id + " not found."));
+
+        updatedPatient.setFirstName(patientDetails.getFirstName());
+        updatedPatient.setLastName(patientDetails.getLastName());
+        updatedPatient.setDateOfBirth(patientDetails.getDateOfBirth());
+        updatedPatient.setPhone(patientDetails.getPhone());
+        updatedPatient.setEmail(patientDetails.getEmail());
+        return patientRepository.save(updatedPatient);
+    }
+
+    public void deletePatient(Long id) {
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient " + id + " not found."));
+        patientRepository.delete(patient);
     }
 }

@@ -2,6 +2,7 @@ package com.seneyu.service;
 
 import com.seneyu.AppointmentStatus;
 import com.seneyu.entity.Appointment;
+import com.seneyu.exception.ResourceNotFoundException;
 import com.seneyu.repository.AppointmentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,27 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
-    public Optional<Appointment> getAppointmentById(Long id) {
-        return appointmentRepository.findById(id);
+    public Appointment getAppointmentById(Long id) {
+        return appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
     }
 
     public Appointment createAppointment(Appointment appointment) {
         return appointmentRepository.save(appointment);
+    }
+
+    public Appointment updateAppointment(Long id, Appointment appointmentDetails) {
+        Appointment updatedAppointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
+
+        updatedAppointment.setStartTime(appointmentDetails.getStartTime());
+        updatedAppointment.setEndTime(appointmentDetails.getEndTime());
+        updatedAppointment.setProviderId(appointmentDetails.getProviderId());
+        updatedAppointment.setPatient(appointmentDetails.getPatient());
+        updatedAppointment.setRoomId(appointmentDetails.getRoomId());
+        updatedAppointment.setAppointmentTypes(appointmentDetails.getAppointmentTypes());
+        updatedAppointment.setAppointmentStatus(appointmentDetails.getAppointmentStatus());
+        return appointmentRepository.save(updatedAppointment);
     }
 
     @Transactional
@@ -38,5 +54,11 @@ public class AppointmentService {
         Appointment appointment = found.get();
         appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
         return Optional.of(appointment);
+    }
+
+    public void deleteAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
+        appointmentRepository.delete(appointment);
     }
 }
