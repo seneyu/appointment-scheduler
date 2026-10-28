@@ -3,11 +3,13 @@ package com.seneyu.entity;
 import com.seneyu.AppointmentStatus;
 import com.seneyu.AppointmentType;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 import java.time.Instant;
 import java.util.Set;
 
 @Entity
+@Builder
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

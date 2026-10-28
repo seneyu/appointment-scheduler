@@ -1,9 +1,14 @@
 package com.seneyu.service;
 
 import com.seneyu.AppointmentStatus;
+import com.seneyu.dto.AppointmentRequest;
+import com.seneyu.dto.AppointmentResponse;
 import com.seneyu.entity.Appointment;
+import com.seneyu.entity.Patient;
 import com.seneyu.exception.ResourceNotFoundException;
+import com.seneyu.mapper.AppointmentMapper;
 import com.seneyu.repository.AppointmentRepository;
+import com.seneyu.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +18,15 @@ import java.util.Optional;
 @Service
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
+    private final AppointmentMapper appointmentMapper;
 
-    public AppointmentService(AppointmentRepository appointmentRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository,
+                              PatientRepository patientRepository,
+                              AppointmentMapper appointmentMapper) {
         this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.appointmentMapper = appointmentMapper;
     }
 
     public List<Appointment> getAllAppointments() {
@@ -27,22 +38,26 @@ public class AppointmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
     }
 
-    public Appointment createAppointment(Appointment appointment) {
-        return appointmentRepository.save(appointment);
+    public AppointmentResponse createAppointment(AppointmentRequest request) {
+        Long patientId = request.patientId();
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient " + patientId + " not found."));
+
+        Appointment entityAppointment = appointmentMapper.toEntity(request, patient);
+        Appointment savedAppointment = appointmentRepository.save(entityAppointment);
+        return appointmentMapper.toResponse(savedAppointment);
     }
 
-    public Appointment updateAppointment(Long id, Appointment appointmentDetails) {
-        Appointment updatedAppointment = appointmentRepository.findById(id)
+    public AppointmentResponse updateAppointment(Long id, AppointmentRequest request) {
+        Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
 
-        updatedAppointment.setStartTime(appointmentDetails.getStartTime());
-        updatedAppointment.setEndTime(appointmentDetails.getEndTime());
-        updatedAppointment.setProviderId(appointmentDetails.getProviderId());
-        updatedAppointment.setPatient(appointmentDetails.getPatient());
-        updatedAppointment.setRoomId(appointmentDetails.getRoomId());
-        updatedAppointment.setAppointmentTypes(appointmentDetails.getAppointmentTypes());
-        updatedAppointment.setAppointmentStatus(appointmentDetails.getAppointmentStatus());
-        return appointmentRepository.save(updatedAppointment);
+        Long patientId = request.patientId();
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient " + patientId + " not found."));
+
+        appointmentMapper.updateEntityFromRequest(appointment, request, patient);
+        return appointmentMapper.toResponse(appointmentRepository.save(appointment));
     }
 
     @Transactional

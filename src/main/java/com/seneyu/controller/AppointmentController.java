@@ -1,5 +1,7 @@
 package com.seneyu.controller;
 
+import com.seneyu.dto.AppointmentRequest;
+import com.seneyu.dto.AppointmentResponse;
 import com.seneyu.entity.Appointment;
 import com.seneyu.service.AppointmentService;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,7 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public List<Appointment> getAllAppointments() {
+    public List<AppointmentResponse> getAllAppointments() {
         return appointmentService.getAllAppointments();
     }
 
@@ -30,14 +32,14 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> addNewAppointment(@RequestBody Appointment appointment) {
-        Appointment savedAppointment = appointmentService.createAppointment(appointment);
+    public ResponseEntity<AppointmentResponse> createAppointment(@RequestBody AppointmentRequest appointment) {
+        AppointmentResponse savedAppointment = appointmentService.createAppointment(appointment);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAppointment);
     }
 
     @PutMapping("{id}")
-    public Appointment updateAppointment(@PathVariable Long id, @RequestBody Appointment appointmentDetails) {
-        return appointmentService.updateAppointment(id, appointmentDetails);
+    public AppointmentResponse updateAppointment(@PathVariable Long id, @RequestBody AppointmentRequest updatedAppointment) {
+        return appointmentService.updateAppointment(id, updatedAppointment);
     }
 
     @PatchMapping("{id}/cancel")
