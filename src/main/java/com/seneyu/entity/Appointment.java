@@ -44,7 +44,7 @@ public class Appointment {
     @NotEmpty(message = "At least one appointment type is required")
     @ElementCollection(targetClass = AppointmentType.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "appointment_types", joinColumns = @JoinColumn(name = "appointment_id"))
+    @Column(nullable = false)
     private Set<AppointmentType> appointmentTypes;
 
     @Enumerated(EnumType.STRING)
