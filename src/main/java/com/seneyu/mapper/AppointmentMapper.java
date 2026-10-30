@@ -46,4 +46,10 @@ public class AppointmentMapper {
         appointment.setRoomId(request.roomId());
         appointment.setAppointmentTypes(request.appointmentTypes());
     }
+
+    public List<AppointmentResponse> toResponseList(List<Appointment> appointments) {
+        return appointments.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
 }

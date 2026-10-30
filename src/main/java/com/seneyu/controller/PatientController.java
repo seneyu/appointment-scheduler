@@ -2,6 +2,7 @@ package com.seneyu.controller;
 
 import com.seneyu.entity.Patient;
 import com.seneyu.service.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,13 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
+    public ResponseEntity<Patient> createPatient(@Valid @RequestBody Patient patient) {
         Patient savedPatient = patientService.createPatient(patient);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPatient);
     }
 
     @PutMapping("{id}")
-    public Patient updatePatient(@PathVariable Long id, @RequestBody Patient patientDetails) {
+    public Patient updatePatient(@PathVariable Long id, @Valid @RequestBody Patient patientDetails) {
         return patientService.updatePatient(id, patientDetails);
     }
 

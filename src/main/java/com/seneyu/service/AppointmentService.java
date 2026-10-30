@@ -9,11 +9,10 @@ import com.seneyu.exception.ResourceNotFoundException;
 import com.seneyu.mapper.AppointmentMapper;
 import com.seneyu.repository.AppointmentRepository;
 import com.seneyu.repository.PatientRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -29,13 +28,15 @@ public class AppointmentService {
         this.appointmentMapper = appointmentMapper;
     }
 
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+    public List<AppointmentResponse> getAllAppointments() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointmentMapper.toResponseList(appointments);
     }
 
-    public Appointment getAppointmentById(Long id) {
-        return appointmentRepository.findById(id)
+    public AppointmentResponse getAppointmentById(Long id) {
+        Appointment entityAppointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
+        return appointmentMapper.toResponse(entityAppointment);
     }
 
     public AppointmentResponse createAppointment(AppointmentRequest request) {
@@ -61,14 +62,12 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Optional<Appointment> cancelAppointment(Long id) {
-        Optional<Appointment> found = appointmentRepository.findById(id);
-        if (found.isEmpty()) {
-            return Optional.empty();
-        }
-        Appointment appointment = found.get();
-        appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
-        return Optional.of(appointment);
+    public AppointmentResponse cancelAppointment(Long id) {
+        Appointment found = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
+
+        found.setAppointmentStatus(AppointmentStatus.CANCELLED);
+        return appointmentMapper.toResponse(found);
     }
 
     public void deleteAppointment(Long id) {

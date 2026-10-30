@@ -3,6 +3,9 @@ package com.seneyu.entity;
 import com.seneyu.AppointmentStatus;
 import com.seneyu.AppointmentType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.Instant;
@@ -15,25 +18,33 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Start time is required")
+    @Future(message = "Start time must be in the future")
     @Column(nullable = false)
     private Instant startTime;
 
+    @NotNull(message = "End time is required")
+    @Future(message = "End time must be in the future")
     @Column(nullable = false)
     private Instant endTime;
 
+    @NotNull(message = "Provider ID is required")
     @Column(nullable = false)
     private Integer providerId;
 
+    @NotNull(message = "Patient is required")
     @ManyToOne(optional = false)
     @JoinColumn(name="patient_id", nullable = false)
     private Patient patient;
 
+    @NotNull(message = "Room ID is required")
     @Column(nullable = false)
     private Integer roomId;
 
+    @NotEmpty(message = "At least one appointment type is required")
     @ElementCollection(targetClass = AppointmentType.class)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @CollectionTable(name = "appointment_types", joinColumns = @JoinColumn(name = "appointment_id"))
     private Set<AppointmentType> appointmentTypes;
 
     @Enumerated(EnumType.STRING)

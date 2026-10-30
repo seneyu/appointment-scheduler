@@ -15,7 +15,7 @@ Content-Type: application/json
   "firstName": "Jane",
   "lastName": "Smith",
   "dateOfBirth": "1990-03-20",
-  "phone": "123-455-0000"
+  "phone": "1234550000"
 }
 
 ###
@@ -26,7 +26,7 @@ Content-Type: application/json
   "firstName": "John",
   "lastName": "Doe",
   "dateOfBirth": "1991-04-20",
-  "phone": "127-495-8888",
+  "phone": "1274958888",
   "email": "johndoe@email.com"
 }
 
@@ -44,8 +44,8 @@ POST http://localhost:8080/api/v1/appointments
 Content-Type: application/json
 
 {
-  "startTime": "2026-10-27T09:00:00Z",
-  "endTime": "2026-10-27T09:30:00Z",
+  "startTime": "2026-11-27T09:00:00Z",
+  "endTime": "2026-11-27T09:30:00Z",
   "providerId": 4,
   "patientId": 1,
   "roomId": 10,
@@ -53,7 +53,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:8080/api/v1/appointments/2/cancel
+PATCH http://localhost:8080/api/v1/appointments/1/cancel
 
 ###
 PUT http://localhost:8080/api/v1/appointments/2
