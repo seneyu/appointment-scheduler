@@ -32,7 +32,7 @@ public class Appointment {
     @Column(nullable = false)
     private Integer providerId;
 
-    @NotNull(message = "Patient is required")
+    @NotNull(message = "Patient ID is required")
     @ManyToOne(optional = false)
     @JoinColumn(name="patient_id", nullable = false)
     private Patient patient;
