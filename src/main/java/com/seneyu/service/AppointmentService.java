@@ -5,6 +5,7 @@ import com.seneyu.dto.AppointmentRequest;
 import com.seneyu.dto.AppointmentResponse;
 import com.seneyu.entity.Appointment;
 import com.seneyu.entity.Patient;
+import com.seneyu.exception.AppointmentConflictException;
 import com.seneyu.exception.ResourceNotFoundException;
 import com.seneyu.mapper.AppointmentMapper;
 import com.seneyu.repository.AppointmentRepository;
@@ -39,16 +40,27 @@ public class AppointmentService {
         return appointmentMapper.toResponse(entityAppointment);
     }
 
+    @Transactional
     public AppointmentResponse createAppointment(AppointmentRequest request) {
         Long patientId = request.patientId();
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient " + patientId + " not found."));
+
+        if (appointmentRepository.existsConflict(request.startTime(),
+                request.endTime(),
+                request.providerId(),
+                request.roomId(),
+                List.of(AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED),
+                null)) {
+            throw new AppointmentConflictException("Appointment overlap conflict.");
+        }
 
         Appointment entityAppointment = appointmentMapper.toEntity(request, patient);
         Appointment savedAppointment = appointmentRepository.save(entityAppointment);
         return appointmentMapper.toResponse(savedAppointment);
     }
 
+    @Transactional
     public AppointmentResponse updateAppointment(Long id, AppointmentRequest request) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
@@ -56,6 +68,15 @@ public class AppointmentService {
         Long patientId = request.patientId();
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient " + patientId + " not found."));
+
+        if (appointmentRepository.existsConflict(request.startTime(),
+                request.endTime(),
+                request.providerId(),
+                request.roomId(),
+                List.of(AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED),
+                appointment.getId())) {
+            throw new AppointmentConflictException("Appointment overlap conflict.");
+        }
 
         appointmentMapper.updateEntityFromRequest(appointment, request, patient);
         return appointmentMapper.toResponse(appointmentRepository.save(appointment));

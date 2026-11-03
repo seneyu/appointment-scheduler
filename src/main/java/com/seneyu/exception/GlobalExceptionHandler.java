@@ -51,6 +51,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AppointmentConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleAppointmentConflict(AppointmentConflictException ex, WebRequest req) {
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("path", req.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
     // catch-all handler
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex, WebRequest req) {

@@ -44,11 +44,11 @@ POST http://localhost:8080/api/v1/appointments
 Content-Type: application/json
 
 {
-  "startTime": "2026-10-27T09:00:00Z",
-  "endTime": "2026-10-27T09:30:00Z",
-  "providerId": 4,
+  "startTime": "2026-11-27T09:00:00Z",
+  "endTime": "2026-11-27T09:30:00Z",
+  "providerId": 3,
   "patientId": 1,
-  "roomId": 10,
+  "roomId": 1,
   "appointmentTypes": ["EXAM", "CLEANING"]
 }
 
@@ -56,13 +56,13 @@ Content-Type: application/json
 PATCH http://localhost:8080/api/v1/appointments/1/cancel
 
 ###
-PUT http://localhost:8080/api/v1/appointments/2
+PUT http://localhost:8080/api/v1/appointments/1
 Content-Type: application/json
 
 {
   "startTime": "2026-12-20T09:00:00Z",
   "endTime": "2026-12-20T10:00:00Z",
-  "providerId": 1,
+  "providerId": 3,
   "patientId": 1,
   "roomId": 2,
   "appointmentTypes": ["FILLING"]
