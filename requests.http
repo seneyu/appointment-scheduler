@@ -53,7 +53,13 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:8080/api/v1/appointments/1/cancel
+PATCH http://localhost:8080/api/v1/appointments/2/cancel
+
+###
+PATCH http://localhost:8080/api/v1/appointments/2/confirm
+
+###
+PATCH http://localhost:8080/api/v1/appointments/2/complete
 
 ###
 PUT http://localhost:8080/api/v1/appointments/1

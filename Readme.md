@@ -29,6 +29,8 @@ Base path: `/api/v1`. Example requests for every endpoint are in [requests.http]
 | POST | `/appointments` | Create an appointment (status set to `SCHEDULED`) |
 | PUT | `/appointments/{id}` | Update an appointment |
 | PATCH | `/appointments/{id}/cancel` | Cancel an appointment |
+| PATCH | `/appointments/{id}/confirm` | Confirm an appointment |
+| PATCH | `/appointments/{id}/complete` | Complete an appointment |
 | DELETE | `/appointments/{id}` | Delete an appointment |
 
 ## Next Steps

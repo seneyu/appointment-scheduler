@@ -87,7 +87,39 @@ public class AppointmentService {
         Appointment found = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
 
+        AppointmentStatus status = found.getAppointmentStatus();
+        if (status == AppointmentStatus.COMPLETED) {
+            throw new AppointmentConflictException("Appointment " + id + "'s current status " + found.getAppointmentStatus() + ". Cannot set to CANCELLED.");
+        }
+
         found.setAppointmentStatus(AppointmentStatus.CANCELLED);
+        return appointmentMapper.toResponse(found);
+    }
+
+    @Transactional
+    public AppointmentResponse confirmAppointment(Long id) {
+        Appointment found = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
+
+        AppointmentStatus status = found.getAppointmentStatus();
+        if (status != AppointmentStatus.SCHEDULED) {
+            throw new AppointmentConflictException("Appointment " + id + "'s current status " + found.getAppointmentStatus() + ". Cannot set to CONFIRMED.");
+        }
+
+        found.setAppointmentStatus(AppointmentStatus.CONFIRMED);
+        return appointmentMapper.toResponse(found);
+    }
+
+    @Transactional
+    public AppointmentResponse completeAppointment(Long id) {
+        Appointment found = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
+
+        if (!List.of(AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED).contains(found.getAppointmentStatus())) {
+            throw new AppointmentConflictException("Appointment " + id + "'s current status " + found.getAppointmentStatus() + ". Cannot set to COMPLETED.");
+        }
+
+        found.setAppointmentStatus(AppointmentStatus.COMPLETED);
         return appointmentMapper.toResponse(found);
     }
 

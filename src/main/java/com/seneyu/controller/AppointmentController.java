@@ -48,6 +48,16 @@ public class AppointmentController {
         return appointmentService.cancelAppointment(id);
     }
 
+    @PatchMapping("{id}/confirm")
+    public AppointmentResponse confirmAppointment(@PathVariable Long id) {
+        return appointmentService.confirmAppointment(id);
+    }
+
+    @PatchMapping("{id}/complete")
+    public AppointmentResponse completeAppointment(@PathVariable Long id) {
+        return appointmentService.completeAppointment(id);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
