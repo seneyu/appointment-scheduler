@@ -4,10 +4,12 @@ import com.seneyu.AppointmentType;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.time.Instant;
 import java.util.Set;
 
+@Builder
 public record AppointmentRequest(
 
         @NotNull(message = "Start time is required")

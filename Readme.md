@@ -34,4 +34,4 @@ Base path: `/api/v1`. Example requests for every endpoint are in [requests.http]
 | DELETE | `/appointments/{id}` | Delete an appointment |
 
 ## Next Steps
-- Testing
+- Finish unit tests

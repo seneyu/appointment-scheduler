@@ -46,7 +46,8 @@ public class AppointmentService {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient " + patientId + " not found."));
 
-        if (appointmentRepository.existsConflict(request.startTime(),
+        if (appointmentRepository.existsConflict(
+                request.startTime(),
                 request.endTime(),
                 request.providerId(),
                 request.roomId(),
