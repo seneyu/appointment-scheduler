@@ -70,7 +70,8 @@ public class AppointmentService {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient " + patientId + " not found."));
 
-        if (appointmentRepository.existsConflict(request.startTime(),
+        if (appointmentRepository.existsConflict(
+                request.startTime(),
                 request.endTime(),
                 request.providerId(),
                 request.roomId(),
@@ -124,6 +125,7 @@ public class AppointmentService {
         return appointmentMapper.toResponse(found);
     }
 
+    @Transactional
     public void deleteAppointment(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Appointment " + id + " not found."));
