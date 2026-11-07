@@ -1,7 +1,7 @@
 # Appointment Scheduler
 A Spring Boot REST API for scheduling dental appointments, built on Spring Boot fundamentals: layered architecture, JPA relationships, DTOs, validation, and centralized error handling.
 
-Status: work in progress. Create, update, and delete flows work. Overlapping appointments conflict detection works. Unit tests cover the appointment service layer.
+Status: work in progress. Create, update, and delete flows work. Overlapping appointments conflict detection works. Unit tests cover the appointment service layer and the mapper.
 
 ## Tech Stack
 - Java 21, Maven
@@ -34,5 +34,6 @@ Base path: `/api/v1`. Example requests for every endpoint are in [requests.http]
 | PATCH | `/appointments/{id}/complete` | Complete an appointment |
 | DELETE | `/appointments/{id}` | Delete an appointment |
 
-## Next Steps
-- Finish testing
+## Possible Improvements
+- Safe concurrent bookings
+- Authentication and role-based access
